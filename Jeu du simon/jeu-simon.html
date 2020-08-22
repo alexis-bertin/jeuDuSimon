@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TP4 - Jeu simon</title>
+	<link rel="stylesheet" href="style.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="tools/audiosynth.js"></script>
+
+</head>
+<body>
+	<h1 id="titre1">TP4 - Jeu simon</h1>
+	<h2 id="titre2">R&eacute;alis&eacute; par Alexis Bertin et Adrien Penven.</h2></br>
+	<table id="formulss">
+	<tr id="forms">
+	<td id="forms">
+	<p>Choisir le nombre de notes :</p>
+	<select name="notes" id="notes" onchange="changerNbNotes();">
+	   <option value="3">3</option>
+	   <option value="4">4</option>
+	   <option value="5">5</option>
+	   <option value="6">6</option>
+	   <option value="7">7</option>
+	   <option value="8">8</option>
+	</select>
+	</td>
+	<td id="forms">
+	<p>Choisir la vitesse initiale :</p>
+	<select name="vitesse" id="vitesse" onchange="changerVitesse();">
+	   <option value="facile">Facile</option>
+	   <option value="moyen" selected="selected">Moyen</option>
+	   <option value="difficile">Difficile</option>
+	</select>
+	</td>
+	</tr>
+	</table>
+	<div id="boutons">
+		<table>
+		<tr>
+			<td><div id="bouton1"><div id="note1">La4</div></div></br></td>
+			<td><div id="bouton2"><div id="note2">Si4</div></div></br></td>
+			<td><div id="bouton3"><div id="note3">Do4</div></div></br></td>
+			<td><div id="bouton4"><div id="note4">R&eacute;4</div></div></br></td>
+			<td><div id="bouton5"><div id="note5">Mi4</div></div></br></td>
+			<td><div id="bouton6"><div id="note6">Fa4</div></div></br></td>
+			<td><div id="bouton7"><div id="note7">Sol4</div></div></br></td>
+			<td><div id="bouton8"><div id="note8">La3</div></div></br></td>
+		</tr>
+		</table>
+	</div></br>
+	<div id="win">Vous avez gagn&eacute; !</div>
+	<div id="loose">Score : </div>
+	<div id="elbouton"><button id="start"> Jouer </button></div>
+	<div id="stop"><button id="arreter" onclick="document.location.reload(false)"> Arrêter le jeu </button></div>
+	<div id="lebouton"><button id="restart" onClick="document.location.reload(false)"> Rejouer </button></div>
+	<script type="text/javascript">
+
+			$(function(){
+			   $('#start').click(function(){
+			      	$('#elbouton').toggle(); 
+			      	$( "#stop" ).toggle();
+			      	var select2 = document.getElementById("vitesse");
+					var valeur2 = select2.options[select2.selectedIndex].value;
+					if (valeur2 == "facile") {
+						commencer1(valeur2);
+					}
+					else if (valeur2 == "moyen") {
+						commencer2(valeur2);
+					}
+					else if (valeur2 == "difficile") {
+						commencer3(valeur2);
+					}
+			   });
+			});
+
+			function commencer1(y) {
+				var select = document.getElementById("notes");
+				var valeur = select.options[select.selectedIndex].value;
+				var valeur2 = y;
+				var vit1 = 800;
+				var vit2 = 1000;
+				demarrer(valeur,vit1,vit2);
+			}
+
+			function commencer2(y) {
+				var select = document.getElementById("notes");
+				var valeur = select.options[select.selectedIndex].value;
+				var valeur2 = y;
+				var vit1 = 600;
+				var vit2 = 800;
+				demarrer(valeur,vit1,vit2);
+			}
+
+			function commencer3(y) {
+				var select = document.getElementById("notes");
+				var valeur = select.options[select.selectedIndex].value;
+				var valeur2 = y;
+				var vit1 = 400;
+				var vit2 = 600;
+				demarrer(valeur,vit1,vit2);
+			}
+
+			
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			
+
+			var tour = 1;
+			var tab1 = new Array();
+			var round = 0;
+			var i = 0;
+			var tab2 = new Array(); 
+								var vit1 = 800;
+					var vit2 = 1000;
+
+
+			function demarrer(x,v1,v2) {
+				$( "#bouton1" ).unbind("mousedown");
+				$( "#bouton2" ).unbind("mousedown");
+				$( "#bouton3" ).unbind("mousedown");
+				$( "#bouton4" ).unbind("mousedown");
+				$( "#bouton5" ).unbind("mousedown");
+				$( "#bouton6" ).unbind("mousedown");
+				$( "#bouton7" ).unbind("mousedown");
+				$( "#bouton8" ).unbind("mousedown");
+				var vit1 = v1;
+				var vit2 = v2;
+				tab2.splice(0, 100);
+				var i = 0;
+				document.getElementById("formulss").style.display = "none";
+				tab1[tour-1] = Math.floor((x)*Math.random()+1); 
+				console.log(tab1);
+				var piano = Synth.createInstrument('piano');
+				lapstime = setInterval(function() {
+					allumage = setInterval(function() {	
+						console.log(tab1[i]);
+						if (tab1[i] == 1) {
+							piano.play('A', 4, 1);
+					  		$("#bouton1").css('background-color', '#FB6666');
+					  		$('#note1').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+					  		clearInterval(allumage);
+						}
+						else if (tab1[i] == 2) {
+							piano.play('B', 4, 1);
+							$("#bouton2").css('background-color', '#8473FB');
+							$('#note2').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+							clearInterval(allumage);
+						}
+						else if (tab1[i] == 3) {
+							piano.play('C', 4, 1);
+					  		$("#bouton3").css('background-color', '#5CD55C');
+					  		$('#note3').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+					  		clearInterval(allumage);
+						}
+						else if (tab1[i] == 4) {
+							piano.play('D', 4, 1);
+							$("#bouton4").css('background-color', '#F2F5A9');
+							$('#note4').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+							clearInterval(allumage);
+						}
+						else if (tab1[i] == 5) {
+							piano.play('E', 4, 1);
+					  		$("#bouton5").css('background-color', '#FBEFF2');
+					  		$('#note5').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+					  		clearInterval(allumage);
+						}
+						else if (tab1[i] == 6) {
+							piano.play('F', 4, 1);
+							$("#bouton6").css('background-color', '#E2A9F3');
+							$('#note6').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+							clearInterval(allumage);
+						}
+						else if (tab1[i] == 7) {
+							piano.play('G', 4, 1);
+					  		$("#bouton7").css('background-color', '#D7DF01');
+					  		$('#note7').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+					  		clearInterval(allumage);
+						}
+						else if (tab1[i] == 8) {
+							piano.play('A', 3, 1);
+					  		$("#bouton8").css('background-color', '#DF3A01');
+					  		$('#note8').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+					  		clearInterval(allumage);
+						}
+						var toutour = tour - 1;
+						if (i == toutour) {
+							clearInterval(allumage);
+						}
+						i += 1 ;
+					}, vit1);
+					$("#bouton8").css('background-color', 'maroon');
+					$("#bouton7").css('background-color', 'olive');
+					$("#bouton6").css('background-color', 'purple');
+					$("#bouton5").css('background-color', 'pink');
+					$("#bouton4").css('background-color', 'yellow');
+					$("#bouton3").css('background-color', 'green');
+					$("#bouton2").css('background-color', 'blue');
+					$("#bouton1").css('background-color', 'red');
+					var toutour = tour - 1;
+					if (i == toutour) {
+						console.log("true");
+						clearInterval(lapstime);
+						var attente = vit1+vit2;
+						setTimeout(function() {
+						    animationClic(vit1,vit2);
+						    $("#bouton8").css('background-color', 'maroon');
+							$("#bouton7").css('background-color', 'olive');
+							$("#bouton6").css('background-color', 'purple');
+							$("#bouton5").css('background-color', 'pink');
+							$("#bouton4").css('background-color', 'yellow');
+							$("#bouton3").css('background-color', 'green');
+							$("#bouton2").css('background-color', 'blue');
+							$("#bouton1").css('background-color', 'red');
+						}, attente)
+					}
+					else {console.log("false");}
+				}, vit2)
+			}
+			
+
+
+			function comparerTableaux(tab1, tab2, v1, v2) {
+				var vit1 = v1;
+				var vit2 = v2;
+				var select = document.getElementById("notes");
+				var valeur = select.options[select.selectedIndex].value;
+				console.log("Comparaison !");
+				for (var i = 0; i < tab2.length; i++) {
+					console.log("Valeur de i : "+i);
+					console.log("Valeur de tab1 : "+tab1[i]);
+					console.log("Valeur de tab2 : "+tab2[i]);
+					if (tab1[i] != tab2[i]) {
+						$('#lebouton').toggle();
+						$( "#stop" ).toggle();
+						document.getElementById('bouton1').style.display = 'none';
+						document.getElementById('bouton2').style.display = 'none';
+						document.getElementById('bouton3').style.display = 'none';
+						document.getElementById('bouton4').style.display = 'none';
+						document.getElementById('bouton5').style.display = 'none';
+						document.getElementById('bouton6').style.display = 'none';
+						document.getElementById('bouton7').style.display = 'none';
+						document.getElementById('bouton8').style.display = 'none';
+						var skoll = tour-1;
+						$("#loose").text('Score : ' + skoll).toggle();
+					}
+					else if (tab1.length == tab2.length && tab1[tab1.length-1] == tab2[tab2.length-1]) {
+						console.log("Valeur de tour : "+ tour)
+						round = 0;
+						tour += 1;
+						var vit = vit1 + vit2;
+						console.log("Vitesse : "+vit);
+						vit1 -= (vit1*10)/100;
+						vit2 -= (vit2*10)/100;
+						i = 0;
+						console.log("C'est bon !");
+						demarrer(valeur,vit1,vit2);
+					}
+					else if (tab1[i] == tab2[i]) {
+						console.log("Nouveau round !");
+						animationClic(vit1, vit2);
+					}
+				}
+				return;
+			}	
+
+			function animationClic(v1, v2) {
+				var vit1 = v1;
+				var vit2 = v2;
+				console.log("Début tour !");
+				var piano = Synth.createInstrument('piano');
+				$("#bouton1").mousedown(function(event) {
+					console.log(tab2);
+					tab2.push(1);
+				  	piano.play('A', 4, 1);
+				  	$('#note1').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+				  	$(this).css('background-color', '#FB6666');
+				  	$(this).mouseup(function() {
+					  	$(this).css('background-color', 'red');
+					});
+					console.log(tab2);
+					comparerTableaux(tab1, tab2, vit1, vit2);
+					event.stopImmediatePropagation();
+				});
+				$("#bouton2").mousedown(function(event) {
+					console.log(tab2);
+					tab2.push(2);		
+				  	piano.play('B', 4, 1);
+				  	$('#note2').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+				  	$(this).css('background-color', '#8473FB');
+				  	$(this).mouseup(function() {
+					  	$(this).css('background-color', 'blue');
+					});
+					console.log(tab2);
+					comparerTableaux(tab1, tab2, vit1, vit2);
+					event.stopImmediatePropagation();
+				});
+				$("#bouton3").mousedown(function(event) {
+					console.log(tab2);
+					tab2.push(3);
+					
+				  	piano.play('C', 4, 1);
+				  	$('#note3').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+				  	$(this).css('background-color', '#5CD55C');
+				  	$(this).mouseup(function() {
+					  	$(this).css('background-color', 'green');
+					});
+					console.log(tab2);
+					comparerTableaux(tab1, tab2, vit1, vit2);
+					event.stopImmediatePropagation();
+				});
+				$("#bouton4").mousedown(function(event) {
+					console.log(tab2);
+					tab2.push(4);
+					
+				  	piano.play('D', 4, 1);
+				  	$('#note4').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+				  	$(this).css('background-color', '#F2F5A9');
+				  	$(this).mouseup(function() {
+					  	$(this).css('background-color', 'yellow');
+					});
+					console.log(tab2);
+					comparerTableaux(tab1, tab2, vit1, vit2);
+					event.stopImmediatePropagation();
+				});
+				$("#bouton5").mousedown(function(event) {
+					console.log(tab2);
+					tab2.push(5);
+					
+				  	piano.play('E', 4, 1);
+				  	$('#note5').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+				  	$(this).css('background-color', '#FBEFF2');
+				  	$(this).mouseup(function() {
+					  	$(this).css('background-color', 'pink');
+					});
+					console.log(tab2);
+					comparerTableaux(tab1, tab2, vit1, vit2);
+					event.stopImmediatePropagation();
+				});
+				$("#bouton6").mousedown(function(event) {
+					console.log(tab2);
+					tab2.push(6);
+					
+				  	piano.play('F', 4, 1);
+				  	$('#note6').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+				  	$(this).css('background-color', '#E2A9F3');
+				  	$(this).mouseup(function() {
+					  	$(this).css('background-color', 'purple');
+					});
+					console.log(tab2);
+					comparerTableaux(tab1, tab2, vit1, vit2);
+					event.stopImmediatePropagation();
+				});
+				$("#bouton7").mousedown(function(event) {
+					console.log(tab2);
+					tab2.push(7);
+					
+				  	piano.play('G', 4, 1);
+				  	$('#note7').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+				  	$(this).css('background-color', '#D7DF01');
+				  	$(this).mouseup(function() {
+					  	$(this).css('background-color', 'olive');
+					});
+					console.log(tab2);
+					comparerTableaux(tab1, tab2, vit1, vit2);
+					event.stopImmediatePropagation();
+				});
+				$("#bouton8").mousedown(function(event) {
+					console.log(tab2);
+					tab2.push(8);
+					
+				  	piano.play('A', 3, 1);
+				  	$('#note8').fadeToggle( 200, "linear" ).delay(200).fadeOut( 200 );
+				  	$(this).css('background-color', '#DF3A01');
+				  	$(this).mouseup(function() {
+					  	$(this).css('background-color', 'maroon');
+					});
+					console.log(tab2);
+					comparerTableaux(tab1, tab2, vit1, vit2);
+					event.stopImmediatePropagation();
+				});
+			}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+			
+			//Séquence lue plus vite <--> nombre de notes
+			//Nombres de notes (score) affiché lorsqu'on perd
+		
+		function changerNbNotes() {
+			//récupère valeur du formulaire
+			var select = document.getElementById("notes");
+			var valeur = select.options[select.selectedIndex].value;
+			console.log(valeur);
+			//change le nombre de notes
+			document.getElementById('bouton4').style.display = 'none';
+			document.getElementById('bouton5').style.display = 'none';
+			document.getElementById('bouton6').style.display = 'none';
+			document.getElementById('bouton7').style.display = 'none';
+			document.getElementById('bouton8').style.display = 'none';
+			for (var i = 0; i < valeur-3; i++) {
+				var zbeub = i + 4;
+				$( "#bouton"+zbeub ).toggle(); 
+			}
+		}
+
+		function changerVitesse() {
+			var select = document.getElementById("vitesse");
+			var valeur = select.options[select.selectedIndex].value;
+			console.log(valeur);
+		}
+
+	</script>
+</body>
+</html>
